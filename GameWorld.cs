@@ -14,7 +14,7 @@ namespace ProjectSpaceProject
         public List<TickableObject> tickableObjects = new List<TickableObject>();   //Здесь объекты, которые имеют функцию Update
         public List<GameObject> gameObjects = new List<GameObject>();               //Каждый объект должен быть отрисован, но не каждый должен изменяться со временем.
         public SpriteBatch spriteBatch;                                             //В общем-то можно и наоборот, изменять, но не отрисовывать.
-        public float screenScale = 10;
+        public float screenScale = 3;
 
         public void AddPlayer()
         {   
