@@ -12,13 +12,12 @@ namespace ProjectSpaceProject
     public class Controller
     {
 
-        //public GameI gameInstance;
+        protected GameI gameInstance;
         public ControllableEntity controllablePawn;
 
-
-        public Controller()//GameI _gameInstance) 
+        public Controller(GameI _gameInstance) 
         {
-            //gameInstance = _gameInstance;
+            gameInstance = _gameInstance;
             
         }
 
@@ -80,6 +79,13 @@ namespace ProjectSpaceProject
             if (Keyboard.GetState().IsKeyDown(Keys.S))      { controllablePawn.moveDirection.Y = -1;}
             else if (Keyboard.GetState().IsKeyDown(Keys.W)) { controllablePawn.moveDirection.Y = 1; }
             else                                            { controllablePawn.moveDirection.Y = 0; }
+        
+            //Полноэкранный режим
+
+            if (Keyboard.GetState().IsKeyDown(Keys.LeftAlt) && Keyboard.GetState().IsKeyDown(Keys.Enter))
+            {
+                gameInstance.SwitchFullScreenMode();
+            }
         }
 
         public void LeftMouseClick(int x, int y)
@@ -92,9 +98,9 @@ namespace ProjectSpaceProject
 
         }
 
-        public PlayerController(/*GameI _gameInstance*/) : base()//_gameInstance)
+        public PlayerController(GameI _gameInstance) : base(_gameInstance)
         {
-            //gameInstance = _gameInstance;
+            gameInstance = _gameInstance;
         }
     }
 }
