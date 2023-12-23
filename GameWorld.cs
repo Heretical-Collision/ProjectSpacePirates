@@ -19,7 +19,7 @@ namespace ProjectSpaceProject
         public void AddPlayer()
         {   
             TickableObject tempObj = new PlayerCharacter(
-                new Vector2(200, 200), 
+                new Vector2(20, 20), 
                 new SpriteData(new List<Texture2D>() { 
                         gameInstance.spriteList["defaultch_right"], 
                         gameInstance.spriteList["defaultch_down"],

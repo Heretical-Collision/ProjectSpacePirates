@@ -8,12 +8,12 @@ using System.Data.Common;
 public class SpriteData
 {
     private int currentAtlasId = 0;
-    public List<Texture2D> spriteAtlas;       //Атласы спрайтов
+    public List<Texture2D> spriteAtlas;                                                 //Атласы спрайтов
     public Texture2D CurrentSpriteAtlas { get { return spriteAtlas[currentAtlasId]; } } //Выдаёт атлас с установленным в данный момент идентификатором
-    private int currentSpriteID = 0;    //Номер спрайта в списке текущего атласа, который предназначен для отрисовывания в данный момент времени
-    public List<int> Rows { get; set; }       //Количество строк
-    public List<int> Columns { get; set; }    //Количество столбцов
-    private List<int> totalFrames = new List<int>();            //Общее количество кадров в каждом атласе (строки*столбцы)
+    private int currentSpriteID = 0;                                                    //Номер спрайта в списке текущего атласа, который предназначен для отрисовывания в данный момент времени
+    public List<int> Rows { get; set; }                                                 //Количество строк
+    public List<int> Columns { get; set; }                                              //Количество столбцов
+    private List<int> totalFrames = new List<int>();                                    //Общее количество кадров в каждом атласе (строки*столбцы)
     public List<int> framesPerSecond = new List<int>();
     private int tickCounter = 0;
     public bool animationIsPaused = true;

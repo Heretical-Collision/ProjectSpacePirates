@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -15,17 +16,17 @@ namespace ProjectSpaceProject
         protected GameI gameInstance;
         public ControllableEntity controllablePawn;
 
-        public Controller(GameI _gameInstance) 
+        public Controller(GameI _gameInstance)
         {
             gameInstance = _gameInstance;
-            
+
         }
 
         virtual public void Update(GameTime gameTime)
         {
 
         }
-            
+
     }
 
 
@@ -35,6 +36,7 @@ namespace ProjectSpaceProject
 
         private bool leftClickOccured = false;
         private bool rightClickOccured = false;
+        private bool enterClickOccured = false;
 
         public override void Update(GameTime gameTime)
         {
@@ -70,6 +72,20 @@ namespace ProjectSpaceProject
                 }
             }
 
+            //Проверить, нажат ли Enter
+            if (Keyboard.GetState().IsKeyDown(Keys.Enter))
+            {
+                enterClickOccured = true;
+            }
+            else
+            {
+                if (enterClickOccured)
+                {
+                    gameInstance.SwitchFullScreenMode();
+                    enterClickOccured = false;              //Полноэкранный режим
+                }
+            }
+
             //Управление на WASD
 
             if (Keyboard.GetState().IsKeyDown(Keys.A))      { controllablePawn.moveDirection.X = -1;}
@@ -79,13 +95,6 @@ namespace ProjectSpaceProject
             if (Keyboard.GetState().IsKeyDown(Keys.S))      { controllablePawn.moveDirection.Y = -1;}
             else if (Keyboard.GetState().IsKeyDown(Keys.W)) { controllablePawn.moveDirection.Y = 1; }
             else                                            { controllablePawn.moveDirection.Y = 0; }
-        
-            //Полноэкранный режим
-
-            if (Keyboard.GetState().IsKeyDown(Keys.LeftAlt) && Keyboard.GetState().IsKeyDown(Keys.Enter))
-            {
-                gameInstance.SwitchFullScreenMode();
-            }
         }
 
         public void LeftMouseClick(int x, int y)
