@@ -16,17 +16,17 @@ namespace ProjectSpaceProject
         protected GameI gameInstance;
         public ControllableEntity controllablePawn;
 
-        public Controller(GameI _gameInstance) 
+        public Controller(GameI _gameInstance)
         {
             gameInstance = _gameInstance;
-            
+
         }
 
         virtual public void Update(GameTime gameTime)
         {
 
         }
-            
+
     }
 
 
@@ -88,14 +88,14 @@ namespace ProjectSpaceProject
 
             //Управление на WASD
 
-            if (Keyboard.GetState().IsKeyDown(Keys.A))      { controllablePawn.moveDirection.X = -1;}
+            if (Keyboard.GetState().IsKeyDown(Keys.A)) { controllablePawn.moveDirection.X = -1; }
             else if (Keyboard.GetState().IsKeyDown(Keys.D)) { controllablePawn.moveDirection.X = 1; }
-            else                                            { controllablePawn.moveDirection.X = 0; }
+            else { controllablePawn.moveDirection.X = 0; }
 
-            if (Keyboard.GetState().IsKeyDown(Keys.S))      { controllablePawn.moveDirection.Y = -1;}
+            if (Keyboard.GetState().IsKeyDown(Keys.S)) { controllablePawn.moveDirection.Y = -1; }
             else if (Keyboard.GetState().IsKeyDown(Keys.W)) { controllablePawn.moveDirection.Y = 1; }
-            else                                            { controllablePawn.moveDirection.Y = 0; }
- 
+            else { controllablePawn.moveDirection.Y = 0; }
+
         }
 
         public void LeftMouseClick(int x, int y)
