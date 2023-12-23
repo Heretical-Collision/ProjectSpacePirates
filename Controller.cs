@@ -95,7 +95,6 @@ namespace ProjectSpaceProject
             if (Keyboard.GetState().IsKeyDown(Keys.S))      { controllablePawn.moveDirection.Y = -1;}
             else if (Keyboard.GetState().IsKeyDown(Keys.W)) { controllablePawn.moveDirection.Y = 1; }
             else                                            { controllablePawn.moveDirection.Y = 0; }
-
         }
 
         public void LeftMouseClick(int x, int y)
