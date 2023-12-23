@@ -12,20 +12,28 @@ namespace ProjectSpaceProject
 {
     public class PlayerCharacter : ControllableEntity
     {
-
+        private Vector2 lastFrameMoveDirection = new Vector2(0, 0);
 
         public override void Update(GameTime gameTime)
         {
+            if (lastFrameMoveDirection != moveDirection)
+            {
+                if (moveDirection.X == 1)       { spriteData.SwitchAnimation(0); spriteData.SwitchAnimationPause(false); }
+                else if (moveDirection.X == -1) { spriteData.SwitchAnimation(2); spriteData.SwitchAnimationPause(false); }
+                else if (moveDirection.Y == 1)  { spriteData.SwitchAnimation(3); spriteData.SwitchAnimationPause(false); }
+                else if (moveDirection.Y == -1) { spriteData.SwitchAnimation(1); spriteData.SwitchAnimationPause(false); }
+                else spriteData.SwitchAnimationPause(true);
+            }   
+            lastFrameMoveDirection = moveDirection;
             base.Update(gameTime);
         }
-        public PlayerCharacter(Vector2 _location, SpriteData _spriteData, GameWorld _world) : base(_location, _spriteData, _world)
+        public PlayerCharacter(Vector2 _location, SpriteData _spriteData, GameWorld _world, PlayerController _controller) : base(_location, _spriteData, _world, _controller)
         {
             location = _location;
             spriteData = _spriteData;
             world = _world;
-            controller = new PlayerController();
+            controller = _controller;
             ((PlayerController)controller).controllablePawn = this;
-            world.gameInstance.controllers.Add(controller);
         }
     }
 }

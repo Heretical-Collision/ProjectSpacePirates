@@ -14,7 +14,7 @@ namespace ProjectSpaceProject
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
         public List<Controller> controllers = new List<Controller>();
-        public List<Texture2D> spriteList = new List<Texture2D>();
+        public Dictionary<String, Texture2D> spriteList = new Dictionary<String, Texture2D>();
         public GameWorld gameWorld;
         public GameI()
         {
@@ -26,23 +26,23 @@ namespace ProjectSpaceProject
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-            
+            _graphics.HardwareModeSwitch = false;
             base.Initialize();
         }
 
         protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
-            spriteList.Add(Content.Load<Texture2D>("sprite_ship"));
-            spriteList.Add(Content.Load<Texture2D>("defaultch"));
+            spriteList.Add("defaultch_right", Content.Load<Texture2D>("defaultch_right"));
+            spriteList.Add("defaultch_down", Content.Load<Texture2D>("defaultch_down"));
+            spriteList.Add("defaultch_left", Content.Load<Texture2D>("defaultch_left"));
+            spriteList.Add("defaultch_up", Content.Load<Texture2D>("defaultch_up"));
             gameWorld = CreateWorld();
             // TODO: use this.Content to load your game content here
         }
 
         protected override void Update(GameTime gameTime)
         {
-           //if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
-               //Exit();
             foreach (Controller controller in controllers) 
             {
                 controller.Update(gameTime);
@@ -67,6 +67,22 @@ namespace ProjectSpaceProject
         protected GameWorld CreateWorld()
         {
             return new GameWorld(this, _spriteBatch);
+        }
+
+        public void SwitchFullScreenMode()
+        {
+            if (_graphics.IsFullScreen)
+            {
+                _graphics.PreferredBackBufferWidth = 1280;
+                _graphics.PreferredBackBufferHeight = 720;
+            }
+            else
+            {
+                _graphics.PreferredBackBufferWidth = GraphicsDevice.DisplayMode.Width;
+                _graphics.PreferredBackBufferHeight = GraphicsDevice.DisplayMode.Height;
+            }
+            _graphics.IsFullScreen = !_graphics.IsFullScreen;
+            _graphics.ApplyChanges();
         }
     }
 }
