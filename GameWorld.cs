@@ -15,6 +15,8 @@ namespace ProjectSpaceProject
         public List<GameObject> gameObjects = new List<GameObject>();               //Каждый объект должен быть отрисован, но не каждый должен изменяться со временем.
         public SpriteBatch spriteBatch;                                             //В общем-то можно и наоборот, изменять, но не отрисовывать.
         public float screenScale = 3;
+        public Matrix matrix;
+        public PlayerController ClientPlayerController { get { return (gameInstance.controllers[0] as PlayerController); } }
 
         public void AddPlayer()
         {   
@@ -33,6 +35,7 @@ namespace ProjectSpaceProject
             gameInstance.controllers.Add((tempObj as PlayerCharacter).controller);
             tickableObjects.Add(tempObj);
             gameObjects.Add(tempObj);
+            ((tempObj as PlayerCharacter).controller as PlayerController).cameraLocation = new Vector2(tempObj.location.X, tempObj.location.Y);
         }
 
         public void Update(GameTime gameTime)
@@ -50,11 +53,11 @@ namespace ProjectSpaceProject
             {
                 spriteBatch.Draw(
                     obj.spriteData.CurrentSpriteAtlas, 
-                    obj.location * screenScale,
+                    (obj.location - ClientPlayerController.cameraLocation),// * screenScale,
                     obj.spriteData.sourceRectangleOfFrame,
                     Color.White, 
                     obj.angle,
-                    new Vector2(0, 0),
+                    new Vector2(obj.spriteData.widthOfFrame / 2, obj.spriteData.heightOfFrame / 2),
                     screenScale, 
                     SpriteEffects.None, 
                     1);
@@ -69,7 +72,12 @@ namespace ProjectSpaceProject
             gameInstance = _gameInstance;
             spriteBatch = _spriteBatch;
             AddPlayer();
+            AdaptiveScreenScale();
         }
 
+        public void AdaptiveScreenScale()
+        {
+            screenScale = gameInstance._graphics.PreferredBackBufferWidth / 1280 * 3;
+        }
     }
 }

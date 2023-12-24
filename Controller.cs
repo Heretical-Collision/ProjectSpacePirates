@@ -36,11 +36,14 @@ namespace ProjectSpaceProject
 
         private bool leftClickOccured = false;
         private bool rightClickOccured = false;
-        private bool enterClickOccured = false;
+        private bool altEnterClickOccured = false;
+        public Vector2 cameraLocation = new Vector2(0, 0);
 
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
+            cameraLocation = new Vector2(controllablePawn.location.X - gameInstance._graphics.PreferredBackBufferWidth / 2, controllablePawn.location.Y - gameInstance._graphics.PreferredBackBufferHeight / 2);
+
 
             MouseState mouseState = Mouse.GetState();
 
@@ -73,16 +76,16 @@ namespace ProjectSpaceProject
             }
 
             //Проверить, нажат ли Enter
-            if (Keyboard.GetState().IsKeyDown(Keys.Enter))
+            if (Keyboard.GetState().IsKeyDown(Keys.LeftAlt) && Keyboard.GetState().IsKeyDown(Keys.Enter))
             {
-                enterClickOccured = true;
+                altEnterClickOccured = true;
             }
             else
             {
-                if (enterClickOccured)
+                if (altEnterClickOccured)
                 {
                     gameInstance.SwitchFullScreenMode();
-                    enterClickOccured = false;              //Полноэкранный режим
+                    altEnterClickOccured = false;              //Полноэкранный режим
                 }
             }
 
@@ -95,6 +98,7 @@ namespace ProjectSpaceProject
             if (Keyboard.GetState().IsKeyDown(Keys.S))      { controllablePawn.moveDirection.Y = -1;}
             else if (Keyboard.GetState().IsKeyDown(Keys.W)) { controllablePawn.moveDirection.Y = 1; }
             else                                            { controllablePawn.moveDirection.Y = 0; }
+
         }
 
         public void LeftMouseClick(int x, int y)

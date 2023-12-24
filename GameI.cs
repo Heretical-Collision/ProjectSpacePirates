@@ -11,7 +11,7 @@ namespace ProjectSpaceProject
 {
     public class GameI : Game
     {
-        private GraphicsDeviceManager _graphics;
+        public GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
         public List<Controller> controllers = new List<Controller>();
         public Dictionary<String, Texture2D> spriteList = new Dictionary<String, Texture2D>();
@@ -27,6 +27,9 @@ namespace ProjectSpaceProject
         {
             // TODO: Add your initialization logic here
             _graphics.HardwareModeSwitch = false;
+            _graphics.PreferredBackBufferWidth = 1280;
+            _graphics.PreferredBackBufferHeight = 720;
+            _graphics.ApplyChanges();
             base.Initialize();
         }
 
@@ -83,6 +86,9 @@ namespace ProjectSpaceProject
             }
             _graphics.IsFullScreen = !_graphics.IsFullScreen;
             _graphics.ApplyChanges();
+            gameWorld.AdaptiveScreenScale();
         }
+
+
     }
 }

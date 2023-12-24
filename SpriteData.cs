@@ -72,10 +72,11 @@ public class SpriteData
     public void SwitchAnimationPause(bool newValue)
     {   
         animationIsPaused = newValue;
-        if (!newValue)
-        {
-            currentSpriteID = 0;
-        }
+    }
+
+    public void ResetAnimation() 
+    {
+        currentSpriteID = 0;
         UpdateFrame();
     }
 }

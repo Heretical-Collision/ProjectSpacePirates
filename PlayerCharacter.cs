@@ -22,7 +22,7 @@ namespace ProjectSpaceProject
                 else if (moveDirection.X == -1) { spriteData.SwitchAnimation(2); spriteData.SwitchAnimationPause(false); }
                 else if (moveDirection.Y == 1)  { spriteData.SwitchAnimation(3); spriteData.SwitchAnimationPause(false); }
                 else if (moveDirection.Y == -1) { spriteData.SwitchAnimation(1); spriteData.SwitchAnimationPause(false); }
-                else spriteData.SwitchAnimationPause(true);
+                else { spriteData.SwitchAnimationPause(true); spriteData.ResetAnimation(); }
             }   
             lastFrameMoveDirection = moveDirection;
             base.Update(gameTime);
