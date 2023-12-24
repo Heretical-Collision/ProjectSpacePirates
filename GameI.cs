@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Diagnostics;
+using System.IO;
 
 namespace ProjectSpaceProject
 {
@@ -36,10 +38,12 @@ namespace ProjectSpaceProject
         protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
-            spriteList.Add("defaultch_right", Content.Load<Texture2D>("defaultch_right"));
-            spriteList.Add("defaultch_down", Content.Load<Texture2D>("defaultch_down"));
-            spriteList.Add("defaultch_left", Content.Load<Texture2D>("defaultch_left"));
-            spriteList.Add("defaultch_up", Content.Load<Texture2D>("defaultch_up"));
+
+            foreach (FileInfo t in new DirectoryInfo(Content.RootDirectory).GetFiles("*_img.xnb")) //При нажатии кнопки build в content.mgcb редакторе, все файлы конвертируются в .xnb файлы
+            {                                                                                      //все - это картинки, шрифты, звуки, и т.д., поэтому чтобы дать понять автоматической
+                                                                                                   //загрузке файлов, что данный файл именно картинка, перед расширением в названии должно стоять _img
+                spriteList.Add(t.Name.Split("_img")[0], Content.Load<Texture2D>(t.Name.Split('.')[0]));
+            }
             gameWorld = CreateWorld();
             // TODO: use this.Content to load your game content here
         }

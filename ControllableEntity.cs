@@ -14,7 +14,7 @@ namespace ProjectSpaceProject
     public class ControllableEntity : TickableObject
     {   
         public Vector2 moveDirection = new Vector2(0, 0);
-        public float speed = 1;
+        public float speed = 2;
         public Controller controller;
         public int team = 1;
         public override void Update(GameTime gameTime)

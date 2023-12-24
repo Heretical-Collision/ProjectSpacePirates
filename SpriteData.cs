@@ -39,6 +39,17 @@ public class SpriteData
         UpdateFrame();
     }
 
+    public SpriteData(Texture2D initSprite, int _rows, int _columns, int animationSpeed, int _startSpriteID)
+    {
+        spriteAtlas = new List<Texture2D>() { initSprite };
+        Rows = new List<int>() { _rows };
+        Columns = new List<int>() { _columns };
+        totalFrames = new List<int>() { _rows * _columns };
+        framesPerSecond = new List<int>() { animationSpeed };
+        currentSpriteID = _startSpriteID;
+        UpdateFrame();
+    }
+
     public void Update()
     {   
         if (framesPerSecond[currentAtlasId] > 0 && !animationIsPaused) //Нет смысла обновлять анимацию, если она отсутствует.

@@ -17,16 +17,17 @@ namespace ProjectSpaceProject
         public float screenScale = 3;
         public Matrix matrix;
         public PlayerController ClientPlayerController { get { return (gameInstance.controllers[0] as PlayerController); } }
+        public MapGenerator mapGenerator;
 
         public void AddPlayer()
         {   
             TickableObject tempObj = new PlayerCharacter(
                 new Vector2(20, 20), 
                 new SpriteData(new List<Texture2D>() { 
-                        gameInstance.spriteList["defaultch_right"], 
-                        gameInstance.spriteList["defaultch_down"],
-                        gameInstance.spriteList["defaultch_left"], 
-                        gameInstance.spriteList["defaultch_up"]},
+                        gameInstance.spriteList["defaultchRight"], 
+                        gameInstance.spriteList["defaultchDown"],
+                        gameInstance.spriteList["defaultchLeft"], 
+                        gameInstance.spriteList["defaultchUp"]},
                     new List<int>() { 1, 1, 1, 1 },
                     new List<int>() { 6, 6, 6, 6 },
                     new List<int>() { 6, 6, 6, 6 }),
@@ -53,7 +54,7 @@ namespace ProjectSpaceProject
             {
                 spriteBatch.Draw(
                     obj.spriteData.CurrentSpriteAtlas, 
-                    (obj.location - ClientPlayerController.cameraLocation),// * screenScale,
+                    (obj.location /*- ClientPlayerController.cameraLocation*/) * screenScale,
                     obj.spriteData.sourceRectangleOfFrame,
                     Color.White, 
                     obj.angle,
@@ -72,7 +73,8 @@ namespace ProjectSpaceProject
             gameInstance = _gameInstance;
             spriteBatch = _spriteBatch;
             AddPlayer();
-            AdaptiveScreenScale();
+            mapGenerator = new MapGenerator(this);
+            //AdaptiveScreenScale();
         }
 
         public void AdaptiveScreenScale()

@@ -15,6 +15,7 @@ namespace ProjectSpaceProject
         public float angle = 0;
         public SpriteData spriteData;
         public GameWorld world;
+        public float layer = 0;
 
         public GameObject(Vector2 _location, SpriteData _spriteData, GameWorld _world)
         {
