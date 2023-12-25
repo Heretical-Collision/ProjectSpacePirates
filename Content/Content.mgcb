@@ -61,6 +61,20 @@
 /processorParam:TextureFormat=Color
 /build:defaultchUp_img.png
 
+#begin FRM325.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:FRM325.spritefont
+
+#begin FRM325.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:FRM325.spritefont
+
 #begin tilesAtlas1_img.png
 /importer:TextureImporter
 /processor:TextureProcessor

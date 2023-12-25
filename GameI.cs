@@ -14,10 +14,14 @@ namespace ProjectSpaceProject
     public class GameI : Game
     {
         public GraphicsDeviceManager _graphics;
-        private SpriteBatch _spriteBatch;
+        private SpriteBatch spriteBatch;
         public List<Controller> controllers = new List<Controller>();
         public Dictionary<String, Texture2D> spriteList = new Dictionary<String, Texture2D>();
+        private Dictionary<String, SpriteFont> fonts = new Dictionary<String, SpriteFont>();
         public GameWorld gameWorld;
+
+        private float updateMilliSeconds = 0;
+
         public GameI()
         {
             _graphics = new GraphicsDeviceManager(this);
@@ -37,13 +41,14 @@ namespace ProjectSpaceProject
 
         protected override void LoadContent()
         {
-            _spriteBatch = new SpriteBatch(GraphicsDevice);
+            spriteBatch = new SpriteBatch(GraphicsDevice);
 
             foreach (FileInfo t in new DirectoryInfo(Content.RootDirectory).GetFiles("*_img.xnb")) //При нажатии кнопки build в content.mgcb редакторе, все файлы конвертируются в .xnb файлы
             {                                                                                      //все - это картинки, шрифты, звуки, и т.д., поэтому чтобы дать понять автоматической
                                                                                                    //загрузке файлов, что данный файл именно картинка, перед расширением в названии должно стоять _img
                 spriteList.Add(t.Name.Split("_img")[0], Content.Load<Texture2D>(t.Name.Split('.')[0]));
             }
+            fonts.Add("FRM325", Content.Load<SpriteFont>("FRM325"));
             gameWorld = CreateWorld();
             // TODO: use this.Content to load your game content here
         }
@@ -56,7 +61,7 @@ namespace ProjectSpaceProject
             }
 
             gameWorld.Update(gameTime);
-            //Debug.WriteLine("TPS: " + 1000 / (float)gameTime.ElapsedGameTime.Milliseconds);
+            updateMilliSeconds = (float)gameTime.ElapsedGameTime.Milliseconds;
             base.Update(gameTime);
         }
 
@@ -65,14 +70,16 @@ namespace ProjectSpaceProject
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             gameWorld.Draw(gameTime);
-            // TODO: Add your drawing code here
-            //Debug.WriteLine("FPS: " + 1000 / (float)gameTime.ElapsedGameTime.Milliseconds);
+            spriteBatch.Begin();
+            spriteBatch.DrawString(fonts["FRM325"], "TPS: " + Convert.ToInt32(1000 / updateMilliSeconds), new Vector2(_graphics.PreferredBackBufferWidth - 200, _graphics.PreferredBackBufferHeight - 20), Color.Black);
+            spriteBatch.DrawString(fonts["FRM325"], "FPS: " + Convert.ToInt32(1000 / (float)gameTime.ElapsedGameTime.Milliseconds), new Vector2(_graphics.PreferredBackBufferWidth - 100, _graphics.PreferredBackBufferHeight - 20), Color.Black);
+            spriteBatch.End();
             base.Draw(gameTime);
         }
 
         protected GameWorld CreateWorld()
         {
-            return new GameWorld(this, _spriteBatch);
+            return new GameWorld(this, spriteBatch);
         }
 
         public void SwitchFullScreenMode()
