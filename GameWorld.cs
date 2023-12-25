@@ -14,7 +14,7 @@ namespace ProjectSpaceProject
         public List<TickableObject> tickableObjects = new List<TickableObject>();   //Здесь объекты, которые имеют функцию Update
         public List<GameObject> gameObjects = new List<GameObject>();               //Каждый объект должен быть отрисован, но не каждый должен изменяться со временем.
         public SpriteBatch spriteBatch;                                             //В общем-то можно и наоборот, изменять, но не отрисовывать.
-        public float screenScale = 3;
+        public float screenScale = 1;
         public Matrix matrix;
         public PlayerController ClientPlayerController { get { return (gameInstance.controllers[0] as PlayerController); } }
         public MapGenerator mapGenerator;
@@ -32,7 +32,8 @@ namespace ProjectSpaceProject
                     new List<int>() { 6, 6, 6, 6 },
                     new List<int>() { 6, 6, 6, 6 }),
                 this,
-                new PlayerController(gameInstance));
+                new PlayerController(gameInstance), 
+                1f);
             gameInstance.controllers.Add((tempObj as PlayerCharacter).controller);
             tickableObjects.Add(tempObj);
             gameObjects.Add(tempObj);
@@ -49,19 +50,23 @@ namespace ProjectSpaceProject
 
         public void Draw(GameTime gameTime)
         {
-            spriteBatch.Begin(samplerState: SamplerState.PointClamp);
+            spriteBatch.Begin(sortMode: SpriteSortMode.FrontToBack,
+                samplerState: SamplerState.PointClamp,
+                transformMatrix: Matrix.CreateTranslation(-ClientPlayerController.cameraLocation.X, -ClientPlayerController.cameraLocation.Y, 0f) *
+                    Matrix.CreateScale(ClientPlayerController.cameraZoom * screenScale, ClientPlayerController.cameraZoom * screenScale, 1f) *
+                    Matrix.CreateTranslation(gameInstance._graphics.PreferredBackBufferWidth / 2, gameInstance._graphics.PreferredBackBufferHeight / 2, 0));
             foreach (GameObject obj in gameObjects)
             {
                 spriteBatch.Draw(
                     obj.spriteData.CurrentSpriteAtlas, 
-                    (obj.location /*- ClientPlayerController.cameraLocation*/) * screenScale,
+                    obj.location,
                     obj.spriteData.sourceRectangleOfFrame,
                     Color.White, 
                     obj.angle,
                     new Vector2(obj.spriteData.widthOfFrame / 2, obj.spriteData.heightOfFrame / 2),
-                    screenScale, 
+                    1f, 
                     SpriteEffects.None, 
-                    1);
+                    obj.layer);
 
             }
             spriteBatch.End();
@@ -74,6 +79,7 @@ namespace ProjectSpaceProject
             spriteBatch = _spriteBatch;
             AddPlayer();
             mapGenerator = new MapGenerator(this);
+            // = Matrix.CreateScale(screenScale, screenScale, 1f);
             //AdaptiveScreenScale();
         }
 
@@ -83,3 +89,4 @@ namespace ProjectSpaceProject
         }
     }
 }
+    

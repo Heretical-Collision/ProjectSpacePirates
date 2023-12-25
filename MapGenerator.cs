@@ -15,11 +15,11 @@ namespace ProjectSpaceProject
         {
             gameWorldInstance = _gameWorldInstance;
             
-            /*for(int i = 0; i < 40; i++) 
+            for(int i = 0; i < 40; i++) 
             {
                 for(int j = 0; j < 20; j++) 
-                    //gameWorldInstance.gameObjects.Add(new GameObject(new Vector2(i * 16, j * 16), new SpriteData(gameWorldInstance.gameInstance.spriteList["tilesAtlas1"], 3, 9, 0, 0), gameWorldInstance));
-            }*/
+                    gameWorldInstance.gameObjects.Add(new GameObject(new Vector2(i * 16, j * 16), new SpriteData(gameWorldInstance.gameInstance.spriteList["tilesAtlas1"], 3, 9, 0, 0), gameWorldInstance, 0f));
+            }
         }
     }
 }

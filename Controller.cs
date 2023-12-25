@@ -7,6 +7,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Diagnostics;
 
 namespace ProjectSpaceProject
 {
@@ -38,14 +39,16 @@ namespace ProjectSpaceProject
         private bool rightClickOccured = false;
         private bool altEnterClickOccured = false;
         public Vector2 cameraLocation = new Vector2(0, 0);
+        public int lastMouseWheelValue = 0;
+        public MouseState mouseState;
+        public float cameraZoom = 3;
 
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
-            cameraLocation = new Vector2(controllablePawn.location.X - gameInstance._graphics.PreferredBackBufferWidth / 2, controllablePawn.location.Y - gameInstance._graphics.PreferredBackBufferHeight / 2);
+            cameraLocation = new Vector2(controllablePawn.location.X, controllablePawn.location.Y);
 
-
-            MouseState mouseState = Mouse.GetState();
+            mouseState = Mouse.GetState();
 
             //Проверить, нажата ли левая кнопка мыши
             if (mouseState.LeftButton == ButtonState.Pressed)
@@ -99,11 +102,20 @@ namespace ProjectSpaceProject
             else if (Keyboard.GetState().IsKeyDown(Keys.W)) { controllablePawn.moveDirection.Y = 1; }
             else                                            { controllablePawn.moveDirection.Y = 0; }
 
+            if (mouseState.ScrollWheelValue > lastMouseWheelValue) //Колёсико мыши вверх
+            {
+                cameraZoom = cameraZoom * 1.1f;
+            }
+            else if (mouseState.ScrollWheelValue < lastMouseWheelValue) //Колёсико мыши вниз
+            {
+                cameraZoom = cameraZoom / 1.1f;
+            }
+            lastMouseWheelValue = mouseState.ScrollWheelValue;
         }
 
         public void LeftMouseClick(int x, int y)
         {
-
+            
         }
 
         public void RightMouseClick(int x, int y)
@@ -114,6 +126,7 @@ namespace ProjectSpaceProject
         public PlayerController(GameI _gameInstance) : base(_gameInstance)
         {
             gameInstance = _gameInstance;
+            lastMouseWheelValue = mouseState.ScrollWheelValue;
         }
     }
 }

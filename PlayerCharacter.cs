@@ -27,12 +27,13 @@ namespace ProjectSpaceProject
             lastFrameMoveDirection = moveDirection;
             base.Update(gameTime);
         }
-        public PlayerCharacter(Vector2 _location, SpriteData _spriteData, GameWorld _world, PlayerController _controller) : base(_location, _spriteData, _world, _controller)
+        public PlayerCharacter(Vector2 _location, SpriteData _spriteData, GameWorld _world, PlayerController _controller, float _layer) : base(_location, _spriteData, _world, _controller, _layer)
         {
             location = _location;
             spriteData = _spriteData;
             world = _world;
             controller = _controller;
+            layer = _layer;
             ((PlayerController)controller).controllablePawn = this;
         }
     }

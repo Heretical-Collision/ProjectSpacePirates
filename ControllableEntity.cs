@@ -24,12 +24,13 @@ namespace ProjectSpaceProject
             else velocity = velocity / 2;
         }
 
-        public ControllableEntity(Vector2 _location, SpriteData _spriteData, GameWorld _world, Controller _controler) : base(_location, _spriteData, _world)
+        public ControllableEntity(Vector2 _location, SpriteData _spriteData, GameWorld _world, Controller _controler, float _layer) : base(_location, _spriteData, _world, _layer)
         {
             location = _location;
             spriteData = _spriteData;
             world = _world;
             controller = _controler;
+            layer = _layer;
             (controller).controllablePawn = this;
         }
 

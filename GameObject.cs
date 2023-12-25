@@ -17,11 +17,17 @@ namespace ProjectSpaceProject
         public GameWorld world;
         public float layer = 0;
 
-        public GameObject(Vector2 _location, SpriteData _spriteData, GameWorld _world)
+        public GameObject(Vector2 _location, SpriteData _spriteData, GameWorld _world, float _layer)
         {
             location = _location;
             spriteData = _spriteData;
             world = _world;
+            layer = _layer;
+        }
+
+        virtual public void Destroy() 
+        {
+            world.gameObjects.Remove(this);
         }
     }
 }

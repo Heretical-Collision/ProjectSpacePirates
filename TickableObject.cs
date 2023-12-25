@@ -29,13 +29,19 @@ namespace ProjectSpaceProject
             velocity = velocity + impulse / mass;
         }
 
-        public TickableObject(Vector2 _location, SpriteData _spriteData, GameWorld _world) : base(_location, _spriteData, _world)
+        public TickableObject(Vector2 _location, SpriteData _spriteData, GameWorld _world, float _layer) : base(_location, _spriteData, _world, _layer)
         {
             location = _location;
             spriteData = _spriteData;
             world = _world;
+            layer = _layer;
         }
         
+        override public void Destroy()
+        {   
+            world.tickableObjects.Remove(this);
+            base.Destroy();
+        }
     }
 
 }
