@@ -56,7 +56,7 @@ namespace ProjectSpaceProject
             }
 
             gameWorld.Update(gameTime);
-
+            //Debug.WriteLine("TPS: " + 1000 / (float)gameTime.ElapsedGameTime.Milliseconds);
             base.Update(gameTime);
         }
 
@@ -65,9 +65,8 @@ namespace ProjectSpaceProject
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             gameWorld.Draw(gameTime);
-            
             // TODO: Add your drawing code here
-
+            //Debug.WriteLine("FPS: " + 1000 / (float)gameTime.ElapsedGameTime.Milliseconds);
             base.Draw(gameTime);
         }
 

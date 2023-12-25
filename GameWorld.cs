@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -55,19 +56,26 @@ namespace ProjectSpaceProject
                 transformMatrix: Matrix.CreateTranslation(-ClientPlayerController.cameraLocation.X, -ClientPlayerController.cameraLocation.Y, 0f) *
                     Matrix.CreateScale(ClientPlayerController.cameraZoom * screenScale, ClientPlayerController.cameraZoom * screenScale, 1f) *
                     Matrix.CreateTranslation(gameInstance._graphics.PreferredBackBufferWidth / 2, gameInstance._graphics.PreferredBackBufferHeight / 2, 0));
+    
             foreach (GameObject obj in gameObjects)
             {
-                spriteBatch.Draw(
-                    obj.spriteData.CurrentSpriteAtlas, 
-                    obj.location,
-                    obj.spriteData.sourceRectangleOfFrame,
-                    Color.White, 
-                    obj.angle,
-                    new Vector2(obj.spriteData.widthOfFrame / 2, obj.spriteData.heightOfFrame / 2),
-                    1f, 
-                    SpriteEffects.None, 
-                    obj.layer);
-
+                // Объекты не должны отрисовываться, если они за кадром 
+                if (new Rectangle(Convert.ToInt32(obj.location.X), 
+                                  Convert.ToInt32(obj.location.Y), 
+                                  obj.spriteData.widthOfFrame, 
+                                  obj.spriteData.heightOfFrame).Intersects(ClientPlayerController.CameraFieldOfView))
+                {
+                    spriteBatch.Draw(
+                        obj.spriteData.CurrentSpriteAtlas,
+                        obj.location,
+                        obj.spriteData.sourceRectangleOfFrame,
+                        Color.White,
+                        obj.angle,
+                        new Vector2(obj.spriteData.widthOfFrame / 2, obj.spriteData.heightOfFrame / 2),
+                        1f,
+                        SpriteEffects.None,
+                        obj.layer);
+                }
             }
             spriteBatch.End();
         }
@@ -79,13 +87,11 @@ namespace ProjectSpaceProject
             spriteBatch = _spriteBatch;
             AddPlayer();
             mapGenerator = new MapGenerator(this);
-            // = Matrix.CreateScale(screenScale, screenScale, 1f);
-            //AdaptiveScreenScale();
         }
 
         public void AdaptiveScreenScale()
         {
-            screenScale = gameInstance._graphics.PreferredBackBufferWidth / 1280 * 3;
+            screenScale = gameInstance._graphics.PreferredBackBufferWidth / 1280 * 1;
         }
     }
 }

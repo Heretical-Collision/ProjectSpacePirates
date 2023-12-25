@@ -41,7 +41,15 @@ namespace ProjectSpaceProject
         public Vector2 cameraLocation = new Vector2(0, 0);
         public int lastMouseWheelValue = 0;
         public MouseState mouseState;
-        public float cameraZoom = 3;
+        public float cameraZoom = 1;
+        public Rectangle CameraFieldOfView {
+            get {
+                return new Rectangle(Convert.ToInt32((cameraLocation.X - gameInstance._graphics.PreferredBackBufferWidth / 2 / cameraZoom) ), 
+                                   Convert.ToInt32((cameraLocation.Y - gameInstance._graphics.PreferredBackBufferHeight / 2 / cameraZoom) ), 
+                                   Convert.ToInt32(gameInstance._graphics.PreferredBackBufferWidth / cameraZoom) + 10,
+                                   Convert.ToInt32(gameInstance._graphics.PreferredBackBufferHeight / cameraZoom) + 10); 
+            } 
+        }
 
         public override void Update(GameTime gameTime)
         {
