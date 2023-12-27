@@ -25,10 +25,10 @@ namespace ProjectSpaceProject
             TickableObject tempObj = new PlayerCharacter(
                 new Vector2(20, 20), 
                 new SpriteData(new List<Texture2D>() { 
-                        gameInstance.spriteList["defaultchRight"], 
-                        gameInstance.spriteList["defaultchDown"],
-                        gameInstance.spriteList["defaultchLeft"], 
-                        gameInstance.spriteList["defaultchUp"]},
+                        gameInstance.spriteList["playerCharacterRight"], 
+                        gameInstance.spriteList["playerCharacterDown"],
+                        gameInstance.spriteList["playerCharacterLeft"], 
+                        gameInstance.spriteList["playerCharacterUp"]},
                     new List<int>() { 1, 1, 1, 1 },
                     new List<int>() { 6, 6, 6, 6 },
                     new List<int>() { 6, 6, 6, 6 }),
@@ -60,9 +60,9 @@ namespace ProjectSpaceProject
             foreach (GameObject obj in gameObjects)
             {
                 // Объекты не должны отрисовываться, если они за кадром 
-                if (new Rectangle(Convert.ToInt32(obj.location.X), 
-                                  Convert.ToInt32(obj.location.Y), 
-                                  obj.spriteData.widthOfFrame, 
+                if (new Rectangle(Convert.ToInt32(obj.location.X),
+                                  Convert.ToInt32(obj.location.Y),
+                                  obj.spriteData.widthOfFrame,
                                   obj.spriteData.heightOfFrame).Intersects(ClientPlayerController.CameraFieldOfView))
                 {
                     spriteBatch.Draw(
