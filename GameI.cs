@@ -71,8 +71,8 @@ namespace ProjectSpaceProject
 
             gameWorld.Draw(gameTime);
             spriteBatch.Begin();
-            spriteBatch.DrawString(fonts["FRM325"], "TPS: " + Convert.ToInt32(1000 / updateMilliSeconds), new Vector2(_graphics.PreferredBackBufferWidth - 200, _graphics.PreferredBackBufferHeight - 20), Color.Black);
-            spriteBatch.DrawString(fonts["FRM325"], "FPS: " + Convert.ToInt32(1000 / (float)gameTime.ElapsedGameTime.Milliseconds), new Vector2(_graphics.PreferredBackBufferWidth - 100, _graphics.PreferredBackBufferHeight - 20), Color.Black);
+            spriteBatch.DrawString(fonts["FRM325"], "TPS: " + Convert.ToInt32(1000 / updateMilliSeconds), new Vector2(_graphics.PreferredBackBufferWidth - 200 - (float)new Random().NextDouble() * 5 - 2.5f, _graphics.PreferredBackBufferHeight - 20 - (float)new Random().NextDouble() * 5 - 2.5f), Color.Black);
+            spriteBatch.DrawString(fonts["FRM325"], "FPS: " + Convert.ToInt32(1000 / (float)gameTime.ElapsedGameTime.Milliseconds), new Vector2(_graphics.PreferredBackBufferWidth - 100 - (float)new Random().NextDouble() * 5 - 2.5f, _graphics.PreferredBackBufferHeight - 20 - (float)new Random().NextDouble()*5-2.5f), Color.Black);
             spriteBatch.End();
             base.Draw(gameTime);
         }

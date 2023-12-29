@@ -86,9 +86,9 @@ namespace ProjectSpaceProject
             /*foreach (GameObject obj in gameObjects)
             {
                 // Объекты не должны отрисовываться, если они за кадром 
-                if (new Rectangle(Convert.ToInt32(obj.location.X), 
-                                  Convert.ToInt32(obj.location.Y), 
-                                  obj.spriteData.widthOfFrame, 
+                if (new Rectangle(Convert.ToInt32(obj.location.X),
+                                  Convert.ToInt32(obj.location.Y),
+                                  obj.spriteData.widthOfFrame,
                                   obj.spriteData.heightOfFrame).Intersects(ClientPlayerController.CameraFieldOfView))
                 {
                     spriteBatch.Draw(
