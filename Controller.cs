@@ -8,6 +8,9 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Diagnostics;
+using ProjectSpaceProject.ECS;
+using ProjectSpaceProject.ECS.Control;
+using ProjectSpaceProject.ECS.Movement;
 
 namespace ProjectSpaceProject
 {
@@ -15,7 +18,9 @@ namespace ProjectSpaceProject
     {
 
         protected GameI gameInstance;
-        public ControllableEntity controllablePawn;
+        public Entity controllableEntity;
+        public ControlComponent GetControlComponent { get { return BaseSystem.GetComponentOfEntity(controllableEntity, typeof(ControlComponent)) as ControlComponent; } }
+        public MovementComponent GetMovementComponent { get { return BaseSystem.GetComponentOfEntity(controllableEntity, typeof(MovementComponent)) as MovementComponent; } }
 
         public Controller(GameI _gameInstance)
         {
@@ -54,7 +59,8 @@ namespace ProjectSpaceProject
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
-            cameraLocation = new Vector2(controllablePawn.location.X, controllablePawn.location.Y);
+            bool EntityIsValid = controllableEntity is not null && GetControlComponent is not null && GetMovementComponent is not null;
+            if (EntityIsValid) cameraLocation = new Vector2(GetMovementComponent.location.X, GetMovementComponent.location.Y);
 
             mouseState = Mouse.GetState();
 
@@ -101,14 +107,20 @@ namespace ProjectSpaceProject
             }
 
             //Управление на WASD
+            Vector2 moveDirection = new Vector2(0,0);
+            if (EntityIsValid)
+            {
+                if (Keyboard.GetState().IsKeyDown(Keys.A))      { moveDirection.X = -1;}
+                else if (Keyboard.GetState().IsKeyDown(Keys.D)) { moveDirection.X = 1; }
+                else                                            { moveDirection.X = 0; }
 
-            if (Keyboard.GetState().IsKeyDown(Keys.A))      { controllablePawn.moveDirection.X = -1;}
-            else if (Keyboard.GetState().IsKeyDown(Keys.D)) { controllablePawn.moveDirection.X = 1; }
-            else                                            { controllablePawn.moveDirection.X = 0; }
+                if  (Keyboard.GetState().IsKeyDown(Keys.S))     { moveDirection.Y = -1;}
+                else if (Keyboard.GetState().IsKeyDown(Keys.W)) { moveDirection.Y = 1; }
+                else                                            { moveDirection.Y = 0; }
 
-            if (Keyboard.GetState().IsKeyDown(Keys.S))      { controllablePawn.moveDirection.Y = -1;}
-            else if (Keyboard.GetState().IsKeyDown(Keys.W)) { controllablePawn.moveDirection.Y = 1; }
-            else                                            { controllablePawn.moveDirection.Y = 0; }
+                ControlSystem.ChangeMoveDirection(GetControlComponent, moveDirection.X, moveDirection.Y);
+            }
+
 
             if (mouseState.ScrollWheelValue > lastMouseWheelValue) //Колёсико мыши вверх
             {

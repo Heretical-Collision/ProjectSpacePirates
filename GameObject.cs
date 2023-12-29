@@ -1,4 +1,4 @@
-﻿using Microsoft.Xna.Framework;
+﻿/*using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
@@ -25,9 +25,10 @@ namespace ProjectSpaceProject
             layer = _layer;
         }
 
-        virtual public void Destroy() 
+        virtual public void Destroy()
         {
             world.gameObjects.Remove(this);
         }
     }
 }
+*/

@@ -5,6 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using ProjectSpaceProject.ECS;
+using ProjectSpaceProject.ECS.Movement;
+using ProjectSpaceProject.ECS.Sprite;
 
 namespace ProjectSpaceProject
 {
@@ -14,11 +17,17 @@ namespace ProjectSpaceProject
         public MapGenerator(GameWorld _gameWorldInstance) 
         {
             gameWorldInstance = _gameWorldInstance;
-            
-            for(int i = 0; i < 100; i++) 
+
+            /*for(int i = 0; i < 100; i++) 
             {
                 for(int j = 0; j < 100; j++) 
                     gameWorldInstance.gameObjects.Add(new GameObject(new Vector2(i * 16, j * 16), new SpriteData(gameWorldInstance.gameInstance.spriteList["tilesAtlas1"], 3, 9, 0, 0), gameWorldInstance, 0f));
+            }*/
+
+            for (int i = 0; i < 100; i++)
+            {
+                for (int j = 0; j < 100; j++)
+                    gameWorldInstance.entities.Add(new Entity(new List<BaseComponent>() { new MovementComponent(new Vector2(i * 16, -j * 16)), new SpriteComponent(new SpriteData(gameWorldInstance.gameInstance.spriteList["tilesAtlas1"], 3, 9, 0, 0), new Vector2(0, 0), 0f)}));
             }
         }
     }
