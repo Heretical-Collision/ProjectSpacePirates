@@ -64,7 +64,7 @@ namespace ProjectSpaceProject.ECS.Sprite
                             Color.White,
                             (component as SpriteComponent).spriteAngle,
                             new Vector2((component as SpriteComponent).spriteData.widthOfFrame / 2, (component as SpriteComponent).spriteData.heightOfFrame / 2),
-                            1f,
+                            (component as SpriteComponent).spriteScale,
                             SpriteEffects.None,
                             (component as SpriteComponent).spriteLayer);
 
