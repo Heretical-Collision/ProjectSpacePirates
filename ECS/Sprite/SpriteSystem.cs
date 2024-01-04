@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using ProjectSpaceProject.ECS.Movement;
+using ProjectSpaceProject.ECS.Control;
 
 namespace ProjectSpaceProject.ECS.Sprite
 {
@@ -31,6 +32,25 @@ namespace ProjectSpaceProject.ECS.Sprite
         {
             base.ComponentTick(entity, component);
             (component as SpriteComponent).spriteData.Update();
+            ChangeSpriteByMovement(entity, component);
+        }
+
+        protected void ChangeSpriteByMovement(Entity entity, BaseComponent component) 
+        {
+            if (GetComponentOfEntity(entity, typeof(ControlComponent)) == null) return; //Без ControlComponent это не работает.
+
+            Vector2 moveDirection = (GetComponentOfEntity(entity, typeof(ControlComponent)) as ControlComponent).moveDirection;
+            SpriteData spriteData = (component as SpriteComponent).spriteData;
+
+            if ((component as SpriteComponent).lastFrameMoveDirection != moveDirection)
+            {
+                if (moveDirection.X == 1) { spriteData.SwitchAnimation(0); spriteData.SwitchAnimationPause(false); }
+                else if (moveDirection.X == -1) { spriteData.SwitchAnimation(2); spriteData.SwitchAnimationPause(false); }
+                else if (moveDirection.Y == 1) { spriteData.SwitchAnimation(3); spriteData.SwitchAnimationPause(false); }
+                else if (moveDirection.Y == -1) { spriteData.SwitchAnimation(1); spriteData.SwitchAnimationPause(false); }
+                else { spriteData.SwitchAnimationPause(true); spriteData.ResetAnimation(); }
+            }
+            (component as SpriteComponent).lastFrameMoveDirection = moveDirection;
         }
 
         public void Draw()

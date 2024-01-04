@@ -14,6 +14,7 @@ namespace ProjectSpaceProject.ECS.Sprite
         public float spriteLayer = 0;
         public float spriteAngle = 0;
         public float spriteScale = 1;
+        public Vector2 lastFrameMoveDirection = new Vector2(0, 0);
 
         public SpriteComponent(SpriteData _spriteData, Vector2 _spriteOffset, float _spriteLayer) 
         {

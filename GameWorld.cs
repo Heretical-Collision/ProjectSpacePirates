@@ -47,7 +47,7 @@ namespace ProjectSpaceProject
             ((tempObj as PlayerCharacter).controller as PlayerController).cameraLocation = new Vector2(tempObj.location.X, tempObj.location.Y);*/
             ControlComponent tempRefControlComponent = new ControlComponent();
             entities.Add(new Entity(new List<BaseComponent>() {
-                                        new MovementComponent(new Vector2(50, 50), new Vector2(0, 0)), 
+                                        new MovementComponent(new Vector2(50, 50), new Vector2(0, 0), 1.5f), 
                                         new SpriteComponent(new SpriteData(new List<Texture2D>() { 
                                                     gameInstance.spriteList["playerCharacterRight"], 
                                                     gameInstance.spriteList["playerCharacterDown"],
