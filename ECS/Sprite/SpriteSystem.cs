@@ -42,7 +42,10 @@ namespace ProjectSpaceProject.ECS.Sprite
 
         static public void SetCurrentSpriteName(SpriteComponent spriteComponent, string newSpriteName)
         {
+            if (!spriteComponent.spriteData.Keys.Contains(newSpriteName)) return; //Если название отсутствует в списке анимаций, то воизбежание проблем ничего не меняется
+
             spriteComponent.spriteData[spriteComponent.currentSpriteName].ResetAnimation();
+
             spriteComponent.spriteData[newSpriteName].SwitchAnimationPause(false);
             spriteComponent.currentSpriteName = newSpriteName;
         }
