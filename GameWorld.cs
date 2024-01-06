@@ -16,9 +16,7 @@ namespace ProjectSpaceProject
     public class GameWorld
     {
         public GameI gameInstance;
-        //public List<TickableObject> tickableObjects = new List<TickableObject>();   //Здесь объекты, которые имеют функцию Update
-        //public List<GameObject> gameObjects = new List<GameObject>();               //Каждый объект должен быть отрисован, но не каждый должен изменяться со временем.
-        public SpriteBatch spriteBatch;                                             //В общем-то можно и наоборот, изменять, но не отрисовывать.
+        public SpriteBatch spriteBatch;                                             
         public float screenScale = 1;
         public Matrix matrix;
         public PlayerController ClientPlayerController { get { return (gameInstance.controllers.Count > 0) ? (gameInstance.controllers[0] as PlayerController) : null; } }
@@ -28,34 +26,14 @@ namespace ProjectSpaceProject
 
         public void AddPlayer(Vector2 location)
         {
-            /*TickableObject tempObj = new PlayerCharacter(
-                location, 
-                new SpriteData(new List<Texture2D>() { 
-                        gameInstance.spriteList["playerCharacterRight"], 
-                        gameInstance.spriteList["playerCharacterDown"],
-                        gameInstance.spriteList["playerCharacterLeft"], 
-                        gameInstance.spriteList["playerCharacterUp"]},
-                    new List<int>() { 1, 1, 1, 1 },
-                    new List<int>() { 6, 6, 6, 6 },
-                    new List<int>() { 6, 6, 6, 6 }),
-                this,
-                new PlayerController(gameInstance), 
-                1f);
-            gameInstance.controllers.Add((tempObj as PlayerCharacter).controller);
-            tickableObjects.Add(tempObj);
-            gameObjects.Add(tempObj);
-            ((tempObj as PlayerCharacter).controller as PlayerController).cameraLocation = new Vector2(tempObj.location.X, tempObj.location.Y);*/
             ControlComponent tempRefControlComponent = new ControlComponent();
             entities.Add(new Entity(new List<BaseComponent>() {
                                         new MovementComponent(new Vector2(50, 50), new Vector2(0, 0), 1.5f), 
-                                        new SpriteComponent(new SpriteData(new List<Texture2D>() { 
-                                                    gameInstance.spriteList["playerCharacterRight"], 
-                                                    gameInstance.spriteList["playerCharacterDown"],
-                                                    gameInstance.spriteList["playerCharacterLeft"], 
-                                                    gameInstance.spriteList["playerCharacterUp"]},
-                                                new List<int>() { 1, 1, 1, 1 },
-                                                new List<int>() { 6, 6, 6, 6 },
-                                                new List<int>() { 6, 6, 6, 6 }),
+                                        new SpriteComponent(new Dictionary<string, SpriteData>(){
+                                                           { "WalkRight", new SpriteData(gameInstance.spriteList["playerCharacterRight"], 1, 6, 6, 0)},
+                                                           { "WalkDown", new SpriteData(gameInstance.spriteList["playerCharacterDown"], 1, 6, 6, 0)},
+                                                           { "WalkLeft", new SpriteData(gameInstance.spriteList["playerCharacterLeft"], 1, 6, 6, 0)},
+                                                           { "WalkUp", new SpriteData(gameInstance.spriteList["playerCharacterUp"], 1, 6, 6, 0)}},
                                             new Vector2(0, 0),
                                             1f),
                                         tempRefControlComponent}));
@@ -64,11 +42,6 @@ namespace ProjectSpaceProject
 
         public void Update(GameTime gameTime)
         {
-            /*foreach (TickableObject obj in tickableObjects)
-            {
-                obj.Update(gameTime);
-            }*/
-
             foreach(BaseSystem sys in systems)
             {
                 sys.Update();
@@ -82,27 +55,6 @@ namespace ProjectSpaceProject
                 transformMatrix: Matrix.CreateTranslation(-ClientPlayerController.cameraLocation.X, -ClientPlayerController.cameraLocation.Y, 0f) *
                     Matrix.CreateScale(ClientPlayerController.cameraZoom * screenScale, ClientPlayerController.cameraZoom * screenScale, 1f) *
                     Matrix.CreateTranslation(gameInstance._graphics.PreferredBackBufferWidth / 2, gameInstance._graphics.PreferredBackBufferHeight / 2, 0));
-
-            /*foreach (GameObject obj in gameObjects)
-            {
-                // Объекты не должны отрисовываться, если они за кадром 
-                if (new Rectangle(Convert.ToInt32(obj.location.X),
-                                  Convert.ToInt32(obj.location.Y),
-                                  obj.spriteData.widthOfFrame,
-                                  obj.spriteData.heightOfFrame).Intersects(ClientPlayerController.CameraFieldOfView))
-                {
-                    spriteBatch.Draw(
-                        obj.spriteData.CurrentSpriteAtlas,
-                        obj.location,
-                        obj.spriteData.sourceRectangleOfFrame,
-                        Color.White,
-                        obj.angle,
-                        new Vector2(obj.spriteData.widthOfFrame / 2, obj.spriteData.heightOfFrame / 2),
-                        1f,
-                        SpriteEffects.None,
-                        obj.layer);
-                }
-            }*/
             (systems[1] as SpriteSystem).Draw();
             spriteBatch.End();
         }

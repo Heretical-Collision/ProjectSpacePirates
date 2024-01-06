@@ -1,8 +1,10 @@
-﻿using System;
+﻿using ProjectSpaceProject.ECS.Sprite;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Xna.Framework;
 
 namespace ProjectSpaceProject.ECS.Control
 {
@@ -20,6 +22,26 @@ namespace ProjectSpaceProject.ECS.Control
         {
             _component.moveDirection.X = x;
             _component.moveDirection.Y = y;
+            ChangeSpriteByMovement(_component.entityOfComponent, _component);
+        }
+
+        static protected void ChangeSpriteByMovement(Entity entity, BaseComponent component)
+        {
+            if (GetComponentOfEntity(entity, typeof(ControlComponent)) == null) return; //Без ControlComponent это не работает.
+
+            Vector2 moveDirection = (component as ControlComponent).moveDirection;
+            SpriteComponent spriteComponent =  GetComponentOfEntity(entity, typeof(SpriteComponent)) as SpriteComponent;
+            SpriteData spriteData = SpriteSystem.GetCurrentSprite(spriteComponent);
+
+            if ((component as ControlComponent).lastFrameMoveDirection != moveDirection)
+            {
+                if (moveDirection.X == 1)       { SpriteSystem.SetCurrentSpriteName(spriteComponent, "WalkRight"); spriteData.SwitchAnimationPause(false); }
+                else if (moveDirection.X == -1) { SpriteSystem.SetCurrentSpriteName(spriteComponent, "WalkLeft"); spriteData.SwitchAnimationPause(false); }
+                else if (moveDirection.Y == 1)  { SpriteSystem.SetCurrentSpriteName(spriteComponent, "WalkUp"); spriteData.SwitchAnimationPause(false); }
+                else if (moveDirection.Y == -1) { SpriteSystem.SetCurrentSpriteName(spriteComponent, "WalkDown"); spriteData.SwitchAnimationPause(false); }
+                else { spriteData.SwitchAnimationPause(true); spriteData.ResetAnimation(); }
+            }
+            (component as ControlComponent).lastFrameMoveDirection = moveDirection;
         }
 
         public ControlSystem(GameWorld _gameWorld, Type _typeOfComponent) : base(_gameWorld, _typeOfComponent)

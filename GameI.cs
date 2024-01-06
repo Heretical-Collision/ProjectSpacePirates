@@ -20,8 +20,6 @@ namespace ProjectSpaceProject
         private Dictionary<String, SpriteFont> fonts = new Dictionary<String, SpriteFont>();
         public GameWorld gameWorld;
 
-        private float updateMilliSeconds = 0;
-
         public GameI()
         {
             _graphics = new GraphicsDeviceManager(this);
@@ -31,7 +29,6 @@ namespace ProjectSpaceProject
 
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
             _graphics.HardwareModeSwitch = false;
             _graphics.PreferredBackBufferWidth = 1280;
             _graphics.PreferredBackBufferHeight = 720;
@@ -50,7 +47,6 @@ namespace ProjectSpaceProject
             }
             fonts.Add("FRM325", Content.Load<SpriteFont>("FRM325"));
             gameWorld = CreateWorld();
-            // TODO: use this.Content to load your game content here
         }
 
         protected override void Update(GameTime gameTime)
@@ -61,17 +57,16 @@ namespace ProjectSpaceProject
             }
 
             gameWorld.Update(gameTime);
-            updateMilliSeconds = (float)gameTime.ElapsedGameTime.Milliseconds;
             base.Update(gameTime);
+
         }
 
-        protected override void Draw(GameTime gameTime)
+        protected override void Draw(GameTime gameTime) 
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             gameWorld.Draw(gameTime);
             spriteBatch.Begin();
-            spriteBatch.DrawString(fonts["FRM325"], "TPS: " + Convert.ToInt32(1000 / updateMilliSeconds), new Vector2(_graphics.PreferredBackBufferWidth - 200 - (float)new Random().NextDouble() * 5 - 2.5f, _graphics.PreferredBackBufferHeight - 20 - (float)new Random().NextDouble() * 5 - 2.5f), Color.Black);
             spriteBatch.DrawString(fonts["FRM325"], "FPS: " + Convert.ToInt32(1000 / (float)gameTime.ElapsedGameTime.Milliseconds), new Vector2(_graphics.PreferredBackBufferWidth - 100 - (float)new Random().NextDouble() * 5 - 2.5f, _graphics.PreferredBackBufferHeight - 20 - (float)new Random().NextDouble()*5-2.5f), Color.Black);
             spriteBatch.End();
             base.Draw(gameTime);

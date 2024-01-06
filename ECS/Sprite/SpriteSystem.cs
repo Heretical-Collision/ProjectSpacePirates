@@ -31,26 +31,20 @@ namespace ProjectSpaceProject.ECS.Sprite
         protected override void ComponentTick(Entity entity, BaseComponent component)
         {
             base.ComponentTick(entity, component);
-            (component as SpriteComponent).spriteData.Update();
-            ChangeSpriteByMovement(entity, component);
+            GetCurrentSprite(component as SpriteComponent).Update();
         }
 
-        protected void ChangeSpriteByMovement(Entity entity, BaseComponent component) 
+        static public SpriteData GetCurrentSprite(SpriteComponent spriteComponent)
+        {   
+            if (spriteComponent.spriteData[spriteComponent.currentSpriteName] is not null) return spriteComponent.spriteData[spriteComponent.currentSpriteName];
+            else return spriteComponent.spriteData.First().Value;
+        }
+
+        static public void SetCurrentSpriteName(SpriteComponent spriteComponent, string newSpriteName)
         {
-            if (GetComponentOfEntity(entity, typeof(ControlComponent)) == null) return; //Без ControlComponent это не работает.
-
-            Vector2 moveDirection = (GetComponentOfEntity(entity, typeof(ControlComponent)) as ControlComponent).moveDirection;
-            SpriteData spriteData = (component as SpriteComponent).spriteData;
-
-            if ((component as SpriteComponent).lastFrameMoveDirection != moveDirection)
-            {
-                if (moveDirection.X == 1)       { spriteData.SwitchAnimation(0); spriteData.SwitchAnimationPause(false); }
-                else if (moveDirection.X == -1) { spriteData.SwitchAnimation(2); spriteData.SwitchAnimationPause(false); }
-                else if (moveDirection.Y == 1)  { spriteData.SwitchAnimation(3); spriteData.SwitchAnimationPause(false); }
-                else if (moveDirection.Y == -1) { spriteData.SwitchAnimation(1); spriteData.SwitchAnimationPause(false); }
-                else { spriteData.SwitchAnimationPause(true); spriteData.ResetAnimation(); }
-            }
-            (component as SpriteComponent).lastFrameMoveDirection = moveDirection;
+            spriteComponent.spriteData[spriteComponent.currentSpriteName].ResetAnimation();
+            spriteComponent.spriteData[newSpriteName].SwitchAnimationPause(false);
+            spriteComponent.currentSpriteName = newSpriteName;
         }
 
         public void Draw()
@@ -75,16 +69,16 @@ namespace ProjectSpaceProject.ECS.Sprite
                             // Объекты не должны отрисовываться, если они за кадром 
                             if (new Rectangle(Convert.ToInt32(gameWorld.ClientPlayerController.cameraLocation.X),
                                               Convert.ToInt32(gameWorld.ClientPlayerController.cameraLocation.Y),
-                                              (component as SpriteComponent).spriteData.widthOfFrame,
-                                              (component as SpriteComponent).spriteData.heightOfFrame).Intersects(gameWorld.ClientPlayerController.CameraFieldOfView))
+                                              GetCurrentSprite(component as SpriteComponent).widthOfFrame,
+                                              GetCurrentSprite(component as SpriteComponent).heightOfFrame).Intersects(gameWorld.ClientPlayerController.CameraFieldOfView))
 
                             gameWorld.spriteBatch.Draw(
-                                (component as SpriteComponent).spriteData.CurrentSpriteAtlas,
+                                GetCurrentSprite(component as SpriteComponent).spriteAtlas,    
                                 spriteLocation + (component as SpriteComponent).spriteOffset,
-                                (component as SpriteComponent).spriteData.sourceRectangleOfFrame,
+                                GetCurrentSprite(component as SpriteComponent).sourceRectangleOfFrame,
                                 Color.White,
                                 (component as SpriteComponent).spriteAngle,
-                                new Vector2((component as SpriteComponent).spriteData.widthOfFrame / 2, (component as SpriteComponent).spriteData.heightOfFrame / 2),
+                                new Vector2(GetCurrentSprite(component as SpriteComponent).widthOfFrame / 2, GetCurrentSprite(component as SpriteComponent).heightOfFrame / 2),
                                 (component as SpriteComponent).spriteScale,
                                 SpriteEffects.None,
                                 (component as SpriteComponent).spriteLayer);

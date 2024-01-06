@@ -18,16 +18,10 @@ namespace ProjectSpaceProject
         {
             gameWorldInstance = _gameWorldInstance;
 
-            /*for(int i = 0; i < 100; i++) 
-            {
-                for(int j = 0; j < 100; j++) 
-                    gameWorldInstance.gameObjects.Add(new GameObject(new Vector2(i * 16, j * 16), new SpriteData(gameWorldInstance.gameInstance.spriteList["tilesAtlas1"], 3, 9, 0, 0), gameWorldInstance, 0f));
-            }*/
-
             for (int i = 0; i < 100; i++)
             {
                 for (int j = 0; j < 100; j++)
-                    gameWorldInstance.entities.Add(new Entity(new List<BaseComponent>() { new MovementComponent(new Vector2(i * 16, -j * 16)), new SpriteComponent(new SpriteData(gameWorldInstance.gameInstance.spriteList["tilesAtlas1"], 3, 9, 0, 0), new Vector2(0, 0), 0f)}));
+                    gameWorldInstance.entities.Add(new Entity(new List<BaseComponent>() { new MovementComponent(new Vector2(i * 16, -j * 16)), new SpriteComponent(new Dictionary<string, SpriteData>() { { "tileAtlas1", new SpriteData(gameWorldInstance.gameInstance.spriteList["tilesAtlas1"], 3, 9, 0, 0) } }, new Vector2(0, 0), 0f)}));
             }
         }
     }
