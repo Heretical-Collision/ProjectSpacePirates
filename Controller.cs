@@ -43,8 +43,13 @@ namespace ProjectSpaceProject
         private bool leftClickOccured = false;
         private bool rightClickOccured = false;
         private bool altEnterClickOccured = false;
+        private Dictionary<Keys, bool> keyboardButtonOccured = new Dictionary<Keys, bool>();
+        public delegate void KeyPressedDelegate(Keys keyboardKey);
+        public delegate void KeyReleasedDelegate(Keys keyboardKey);
+        public KeyPressedDelegate KeyPressedEvent;
+        public KeyReleasedDelegate KeyReleasedEvent;
         public Vector2 cameraLocation = new Vector2(0, 0);
-        public int lastMouseWheelValue = 0;
+        private int lastMouseWheelValue = 0;
         public MouseState mouseState;
         public float cameraZoom = 3;
         public Rectangle CameraFieldOfView {
@@ -62,7 +67,27 @@ namespace ProjectSpaceProject
             bool EntityIsValid = controllableEntity is not null && GetControlComponent is not null && GetMovementComponent is not null;
             if (EntityIsValid) cameraLocation = new Vector2(GetMovementComponent.location.X, GetMovementComponent.location.Y);
 
+            KeyboardState keyboardState = Keyboard.GetState();
+            Keys[] pressedKeys = keyboardState.GetPressedKeys();
+
             mouseState = Mouse.GetState();
+
+            foreach(KeyValuePair<Keys, bool> _key in keyboardButtonOccured)
+            {
+                if (pressedKeys.Contains(_key.Key))
+                {
+                    if (!keyboardButtonOccured[_key.Key]) KeyboardKeyPressed(_key.Key);
+                    keyboardButtonOccured[_key.Key] = true;
+                }
+                else 
+                {
+                    if (_key.Value)
+                    {
+                        KeyboardKeyReleased(_key.Key);
+                        keyboardButtonOccured[_key.Key] = false;
+                    }
+                }
+            }
 
             //Проверить, нажата ли левая кнопка мыши
             if (mouseState.LeftButton == ButtonState.Pressed)
@@ -91,7 +116,7 @@ namespace ProjectSpaceProject
                     rightClickOccured = false;
                 }
             }
-
+            
             //Проверить, нажат ли Enter
             if (Keyboard.GetState().IsKeyDown(Keys.LeftAlt) && Keyboard.GetState().IsKeyDown(Keys.Enter))
             {
@@ -143,10 +168,23 @@ namespace ProjectSpaceProject
 
         }
 
+        public void KeyboardKeyPressed(Keys key) //Вызывается, когда клавиша была нажата (один раз)
+        {
+            if (KeyPressedEvent is not null) KeyPressedEvent(key);
+        }
+
+        public void KeyboardKeyReleased(Keys key) //Вызывается, когда клавиша была отпущена
+        {
+            if (KeyPressedEvent is not null) KeyReleasedEvent(key);
+        }
+
+
         public PlayerController(GameI _gameInstance) : base(_gameInstance)
         {
             gameInstance = _gameInstance;
             lastMouseWheelValue = mouseState.ScrollWheelValue;
+            foreach (Keys key in (Keys[])Enum.GetValues(typeof(Keys))) //добавляет все клавиши в словарь. Массив Keys[] немного ускоряет цикл перечисления.
+                keyboardButtonOccured.Add(key, false);
         }
     }
 }

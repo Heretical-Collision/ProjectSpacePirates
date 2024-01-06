@@ -44,9 +44,9 @@ namespace ProjectSpaceProject.ECS.Sprite
 
             if ((component as SpriteComponent).lastFrameMoveDirection != moveDirection)
             {
-                if (moveDirection.X == 1) { spriteData.SwitchAnimation(0); spriteData.SwitchAnimationPause(false); }
+                if (moveDirection.X == 1)       { spriteData.SwitchAnimation(0); spriteData.SwitchAnimationPause(false); }
                 else if (moveDirection.X == -1) { spriteData.SwitchAnimation(2); spriteData.SwitchAnimationPause(false); }
-                else if (moveDirection.Y == 1) { spriteData.SwitchAnimation(3); spriteData.SwitchAnimationPause(false); }
+                else if (moveDirection.Y == 1)  { spriteData.SwitchAnimation(3); spriteData.SwitchAnimationPause(false); }
                 else if (moveDirection.Y == -1) { spriteData.SwitchAnimation(1); spriteData.SwitchAnimationPause(false); }
                 else { spriteData.SwitchAnimationPause(true); spriteData.ResetAnimation(); }
             }
@@ -56,40 +56,42 @@ namespace ProjectSpaceProject.ECS.Sprite
         public void Draw()
         {
             foreach (Entity entity in gameWorld.entities)
-            {
+            {   
+                bool doHaveMovementComponent = false;
                 Vector2 spriteLocation = new Vector2(0, 0);
                 foreach (BaseComponent component in entity.components)
                 {
                     if (component.GetSelfType == typeof(MovementComponent))
                     {
                         spriteLocation = (component as MovementComponent).location;
+                        doHaveMovementComponent = true;
                     }
                 }
-
-                foreach (BaseComponent component in entity.components)
-                {
-                    if (component.GetSelfType == typeOfComponent)
+                if (doHaveMovementComponent) //объекты не должны рисоваться в игровом мире, если они не имеют присутствия в игровом мире (отсутствуют координаты)
+                    foreach (BaseComponent component in entity.components)
                     {
-                        //gameWorld.spriteBatch.Draw((component as SpriteComponent).spriteData);
-                        // Объекты не должны отрисовываться, если они за кадром 
-                        /*if (new Rectangle(Convert.ToInt32(obj.location.X),
-                                          Convert.ToInt32(obj.location.Y),
-                                          obj.spriteData.widthOfFrame,
-                                          obj.spriteData.heightOfFrame).Intersects(ClientPlayerController.CameraFieldOfView))*/
+                        if (component.GetSelfType == typeOfComponent)
+                        {
+                            // Объекты не должны отрисовываться, если они за кадром 
+                            if (new Rectangle(Convert.ToInt32(gameWorld.ClientPlayerController.cameraLocation.X),
+                                              Convert.ToInt32(gameWorld.ClientPlayerController.cameraLocation.Y),
+                                              (component as SpriteComponent).spriteData.widthOfFrame,
+                                              (component as SpriteComponent).spriteData.heightOfFrame).Intersects(gameWorld.ClientPlayerController.CameraFieldOfView))
 
-                        gameWorld.spriteBatch.Draw(
-                            (component as SpriteComponent).spriteData.CurrentSpriteAtlas,
-                            spriteLocation + (component as SpriteComponent).spriteOffset,
-                            (component as SpriteComponent).spriteData.sourceRectangleOfFrame,
-                            Color.White,
-                            (component as SpriteComponent).spriteAngle,
-                            new Vector2((component as SpriteComponent).spriteData.widthOfFrame / 2, (component as SpriteComponent).spriteData.heightOfFrame / 2),
-                            (component as SpriteComponent).spriteScale,
-                            SpriteEffects.None,
-                            (component as SpriteComponent).spriteLayer);
+                            gameWorld.spriteBatch.Draw(
+                                (component as SpriteComponent).spriteData.CurrentSpriteAtlas,
+                                spriteLocation + (component as SpriteComponent).spriteOffset,
+                                (component as SpriteComponent).spriteData.sourceRectangleOfFrame,
+                                Color.White,
+                                (component as SpriteComponent).spriteAngle,
+                                new Vector2((component as SpriteComponent).spriteData.widthOfFrame / 2, (component as SpriteComponent).spriteData.heightOfFrame / 2),
+                                (component as SpriteComponent).spriteScale,
+                                SpriteEffects.None,
+                                (component as SpriteComponent).spriteLayer);
 
+                        }
                     }
-                }
+                doHaveMovementComponent = false;
             }
         }
 
