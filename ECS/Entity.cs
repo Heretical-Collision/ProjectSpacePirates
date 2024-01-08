@@ -8,28 +8,33 @@ namespace ProjectSpaceProject.ECS
 {
     public class Entity
     {
-        public List<BaseComponent> components = new List<BaseComponent>();
+        public BaseComponent[] components;
+        public Type[] typesArray;
         
         public void AddComponent(BaseComponent _component)
         {
-            components.Add(_component);
+            components[Array.IndexOf(typesArray, _component.GetType())] = _component;
             _component.entityOfComponent = this;
+            
         }
 
         public void AddComponents(List<BaseComponent> _components)
-        {
-            components.AddRange(_components);
-            foreach (BaseComponent c in _components) c.entityOfComponent = this;
+        {   
+            foreach(BaseComponent component in _components)
+                AddComponent(component);
         }
 
-        public Entity(List<BaseComponent> _components) 
+        public Entity(List<BaseComponent> _components, Type[] _typesArray) 
         {
+            typesArray = _typesArray;
+            components = new BaseComponent[typesArray.Length];
             AddComponents(_components);
         }
 
-        public Entity()
+        public Entity(Type[] _typesArray)
         {
-
+            typesArray = _typesArray;
+            components = new BaseComponent[typesArray.Length];
         }
     }
 }

@@ -17,16 +17,29 @@ namespace ProjectSpaceProject
     public class Controller
     {
 
-        protected GameI gameInstance;
-        public Entity controllableEntity;
-        public ControlComponent GetControlComponent { get { return BaseSystem.GetComponentOfEntity(controllableEntity, typeof(ControlComponent)) as ControlComponent; } }
-        public MovementComponent GetMovementComponent { get { return BaseSystem.GetComponentOfEntity(controllableEntity, typeof(MovementComponent)) as MovementComponent; } }
+        public GameI gameInstance;
+        public GameWorld gameWorldInstance;
+        public ControlComponent controlComponent; //{ get { return BaseSystem.GetComponentOfEntity(controllableEntity, typeof(ControlComponent), Array.IndexOf(gameInstance.gameWorld.componentsTypesID, typeof(ControlComponent)) as ControlComponent; } }
+        public MovementComponent movementComponent; //{ get { return BaseSystem.GetComponentOfEntity(controllableEntity, typeof(MovementComponent)) as MovementComponent; } }
+        public ControlSystem controlSystem;
 
-        public Controller(GameI _gameInstance)
+        public Controller(GameI _gameInstance, GameWorld _gameWorld)
         {
             gameInstance = _gameInstance;
-
+            gameWorldInstance = _gameWorld;
         }
+        
+        /*public void ChangeControlComponent()
+        {
+            
+            BaseSystem.GetComponentOfEntity(controllableEntity, typeof(ControlComponent), Array.IndexOf(gameInstance.gameWorld.componentsTypesID, typeof(ControlComponent)) as ControlComponent;
+        }
+
+        public void ChangeMovementComponent()
+        {
+
+            BaseSystem.GetComponentOfEntity(controllableEntity, typeof(ControlComponent), Array.IndexOf(gameInstance.gameWorld.componentsTypesID, typeof(ControlComponent)) as ControlComponent;
+        }*/
 
         virtual public void Update(GameTime gameTime)
         {
@@ -52,6 +65,7 @@ namespace ProjectSpaceProject
         private int lastMouseWheelValue = 0;
         public MouseState mouseState;
         public float cameraZoom = 3;
+
         public Rectangle CameraFieldOfView {
             get {
                 return new Rectangle(Convert.ToInt32((cameraLocation.X - gameInstance._graphics.PreferredBackBufferWidth / 2 / cameraZoom) ), 
@@ -64,8 +78,8 @@ namespace ProjectSpaceProject
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
-            bool EntityIsValid = controllableEntity is not null && GetControlComponent is not null && GetMovementComponent is not null;
-            if (EntityIsValid) cameraLocation = new Vector2(GetMovementComponent.location.X, GetMovementComponent.location.Y);
+            bool EntityIsValid = controlComponent is not null && movementComponent is not null;
+            if (EntityIsValid) cameraLocation = new Vector2(movementComponent.location.X, movementComponent.location.Y);
 
             KeyboardState keyboardState = Keyboard.GetState();
             Keys[] pressedKeys = keyboardState.GetPressedKeys();
@@ -143,7 +157,7 @@ namespace ProjectSpaceProject
                 else if (Keyboard.GetState().IsKeyDown(Keys.W)) { moveDirection.Y = 1; }
                 else                                            { moveDirection.Y = 0; }
 
-                ControlSystem.ChangeMoveDirection(GetControlComponent, moveDirection.X, moveDirection.Y);
+                controlSystem.ChangeMoveDirection(controlComponent, moveDirection.X, moveDirection.Y);
             }
 
 
@@ -179,9 +193,9 @@ namespace ProjectSpaceProject
         }
 
 
-        public PlayerController(GameI _gameInstance) : base(_gameInstance)
+        public PlayerController(GameI _gameInstance, GameWorld _gameWorld) : base(_gameInstance, _gameWorld)
         {
-            gameInstance = _gameInstance;
+
             lastMouseWheelValue = mouseState.ScrollWheelValue;
             foreach (Keys key in (Keys[])Enum.GetValues(typeof(Keys))) //добавляет все клавиши в словарь. Массив Keys[] немного ускоряет цикл перечисления.
                 keyboardButtonOccured.Add(key, false);

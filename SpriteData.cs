@@ -30,6 +30,7 @@ public class SpriteData
         Columns = _columns;
         totalFrames = _rows * _columns;
         framesPerSecond = animationSpeed;
+        currentSpriteID = _startSpriteID;
         UpdateFrame();
     }
 

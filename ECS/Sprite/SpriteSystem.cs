@@ -28,10 +28,10 @@ namespace ProjectSpaceProject.ECS.Sprite
 
         }
 
-        protected override void ComponentTick(Entity entity, BaseComponent component)
+        protected override void ComponentTick(Entity entity)
         {
-            base.ComponentTick(entity, component);
-            GetCurrentSprite(component as SpriteComponent).Update();
+            base.ComponentTick(entity);
+            GetCurrentSprite(ComponentOfEntity(entity) as SpriteComponent).Update();
         }
 
         static public SpriteData GetCurrentSprite(SpriteComponent spriteComponent)
@@ -58,34 +58,36 @@ namespace ProjectSpaceProject.ECS.Sprite
                 Vector2 spriteLocation = new Vector2(0, 0);
                 foreach (BaseComponent component in entity.components)
                 {
-                    if (component.GetSelfType == typeof(MovementComponent))
+                    if (component is not null) if (component.GetSelfType == typeof(MovementComponent))
                     {
                         spriteLocation = (component as MovementComponent).location;
                         doHaveMovementComponent = true;
+                        break;
                     }
                 }
                 if (doHaveMovementComponent) //объекты не должны рисоваться в игровом мире, если они не имеют присутствия в игровом мире (отсутствуют координаты)
                     foreach (BaseComponent component in entity.components)
                     {
-                        if (component.GetSelfType == typeOfComponent)
+                        if (component is not null) if (component.GetSelfType == typeOfComponent)
                         {
-                            // Объекты не должны отрисовываться, если они за кадром 
-                            if (new Rectangle(Convert.ToInt32(gameWorld.ClientPlayerController.cameraLocation.X),
-                                              Convert.ToInt32(gameWorld.ClientPlayerController.cameraLocation.Y),
-                                              GetCurrentSprite(component as SpriteComponent).widthOfFrame,
-                                              GetCurrentSprite(component as SpriteComponent).heightOfFrame).Intersects(gameWorld.ClientPlayerController.CameraFieldOfView))
-
-                            gameWorld.spriteBatch.Draw(
-                                GetCurrentSprite(component as SpriteComponent).spriteAtlas,    
-                                spriteLocation + (component as SpriteComponent).spriteOffset,
-                                GetCurrentSprite(component as SpriteComponent).sourceRectangleOfFrame,
-                                Color.White,
-                                (component as SpriteComponent).spriteAngle,
-                                new Vector2(GetCurrentSprite(component as SpriteComponent).widthOfFrame / 2, GetCurrentSprite(component as SpriteComponent).heightOfFrame / 2),
-                                (component as SpriteComponent).spriteScale,
-                                SpriteEffects.None,
-                                (component as SpriteComponent).spriteLayer);
-
+                                // Объекты не должны отрисовываться, если они за кадром 
+                                if (new Rectangle(Convert.ToInt32(gameWorld.ClientPlayerController.cameraLocation.X),
+                                                  Convert.ToInt32(gameWorld.ClientPlayerController.cameraLocation.Y),
+                                                  GetCurrentSprite(component as SpriteComponent).widthOfFrame,
+                                                  GetCurrentSprite(component as SpriteComponent).heightOfFrame).Intersects(gameWorld.ClientPlayerController.CameraFieldOfView))
+                                {
+                                    gameWorld.spriteBatch.Draw(
+                                        GetCurrentSprite(component as SpriteComponent).spriteAtlas,
+                                        spriteLocation + (component as SpriteComponent).spriteOffset,
+                                        GetCurrentSprite(component as SpriteComponent).sourceRectangleOfFrame,
+                                        Color.White,
+                                        (component as SpriteComponent).spriteAngle,
+                                        new Vector2(GetCurrentSprite(component as SpriteComponent).widthOfFrame / 2, GetCurrentSprite(component as SpriteComponent).heightOfFrame / 2),
+                                        (component as SpriteComponent).spriteScale,
+                                        SpriteEffects.None,
+                                        (component as SpriteComponent).spriteLayer);
+                                    break;
+                                }
                         }
                     }
                 doHaveMovementComponent = false;

@@ -5,32 +5,36 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
+using ProjectSpaceProject.ECS.Movement;
+using System.Drawing;
 
 namespace ProjectSpaceProject.ECS.Control
 {
     public class ControlSystem : BaseSystem
     {
         protected override bool isTickable { get { return false; } }
+        protected int spriteComponentID;
 
         static public void ConnectControllerToComponent(ControlComponent _component, Controller _controller)
         {
             _component.controller = _controller;
-            _controller.controllableEntity = _component.entityOfComponent;
+            _controller.controlComponent = _component;
+            _controller.movementComponent = BaseSystem.GetComponentOfEntity(_component.entityOfComponent, typeof(MovementComponent), Array.IndexOf(_controller.gameWorldInstance.componentsTypesID, typeof(MovementComponent))) as MovementComponent;
         }
 
-        static public void ChangeMoveDirection(ControlComponent _component, float x, float y)
+        public void ChangeMoveDirection(ControlComponent _component, float x, float y)
         {
             _component.moveDirection.X = x;
             _component.moveDirection.Y = y;
             ChangeSpriteByMovement(_component.entityOfComponent, _component);
         }
 
-        static protected void ChangeSpriteByMovement(Entity entity, BaseComponent component)
+        protected void ChangeSpriteByMovement(Entity entity, BaseComponent component)
         {
-            if (GetComponentOfEntity(entity, typeof(ControlComponent)) == null) return; //Без ControlComponent это не работает.
+            if (ComponentOfEntity(entity) == null) return; //Без ControlComponent это не работает.
 
             Vector2 moveDirection = (component as ControlComponent).moveDirection;
-            SpriteComponent spriteComponent =  GetComponentOfEntity(entity, typeof(SpriteComponent)) as SpriteComponent;
+            SpriteComponent spriteComponent =  GetComponentOfEntity(entity, typeof(SpriteComponent), spriteComponentID) as SpriteComponent;
             SpriteData spriteData = SpriteSystem.GetCurrentSprite(spriteComponent);
 
             if ((component as ControlComponent).lastFrameMoveDirection != moveDirection)
@@ -46,7 +50,8 @@ namespace ProjectSpaceProject.ECS.Control
 
         public ControlSystem(GameWorld _gameWorld, Type _typeOfComponent) : base(_gameWorld, _typeOfComponent)
         {
-
+            spriteComponentID = Array.IndexOf(gameWorld.componentsTypesID, typeof(SpriteComponent));
+            foreach (Controller c in gameWorld.gameInstance.controllers) c.controlSystem = this;
         }
     }
 }

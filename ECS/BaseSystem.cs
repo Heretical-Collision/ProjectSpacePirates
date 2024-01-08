@@ -10,8 +10,9 @@ namespace ProjectSpaceProject.ECS
     public abstract class BaseSystem
     {
         protected GameWorld gameWorld;
-        protected Type typeOfComponent;
+        public Type typeOfComponent;
         protected virtual bool isTickable { get { return false; } } //Будет ли вызываться функция ComponentTick. Выключить, если нет необходимости в постоянном обновлении компонентов
+        protected int componentID = 0;
 
         public virtual void Run()
         {
@@ -19,44 +20,36 @@ namespace ProjectSpaceProject.ECS
         }
         public virtual void Update()
         {
-            if (isTickable) //Метод виртуальный. Ничего страшного, если компилятор говорит о недостижимости кода.
+            if (isTickable)
             {
-                BaseComponent outComponent;
-                foreach (Entity entity in gameWorld.entities)
+                foreach (Entity entity in gameWorld.entitiesBySystems[this.GetType()])
                 {
-                    outComponent = ComponentOfEntity(entity);
-                    if (outComponent is not null) ComponentTick(entity, outComponent);
+                    ComponentTick(entity);
                 }
             }
         }
 
-        protected virtual void ComponentTick(Entity entity, BaseComponent component)
+        protected virtual void ComponentTick(Entity entity)
         {
 
         }
 
         protected BaseComponent ComponentOfEntity(Entity entity)
         {
-            foreach (BaseComponent comp in entity.components)
-            {
-                if (comp.GetSelfType == typeOfComponent) return comp;
-            }
-            return null;
+            return GetComponentOfEntity(entity, typeOfComponent, componentID);
         }
 
-        static public BaseComponent GetComponentOfEntity(Entity entity, Type _typeOfComponent)
+        static public BaseComponent GetComponentOfEntity(Entity entity, Type _typeOfComponent, int _componentID)
         {
-            foreach (BaseComponent comp in entity.components)
-            {
-                if (comp.GetSelfType == _typeOfComponent) return comp;
-            }
-            return null;
+            return entity.components[_componentID];
         }
+
 
         protected BaseSystem(GameWorld _gameWorld, Type _typeOfComponent) 
         {   
             gameWorld = _gameWorld;
             typeOfComponent = _typeOfComponent;
+            componentID = Array.IndexOf(gameWorld.componentsTypesID, _typeOfComponent);
             Run();
         }
     }
