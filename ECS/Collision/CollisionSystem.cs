@@ -46,7 +46,7 @@ public class CollisionSystem : BaseSystem
                 locComponentsTemp.Add(tlc);
 
                 locationXlist.Add(tlc.location.X + cc.collisionOffset.X);
-                locationYlist.Add(tlc.location.Y + cc.collisionOffset.Y);
+                locationYlist.Add(tlc.location.Y - cc.collisionOffset.Y);
                 rectangleWidthList.Add(cc.rectangleCollision.Width);
                 rectangleHeightList.Add(cc.rectangleCollision.Height);
                 circleRadiusList.Add(cc.circleCollision.radius);
