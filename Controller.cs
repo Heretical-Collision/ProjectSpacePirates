@@ -20,7 +20,7 @@ namespace ProjectSpaceProject
         public GameI gameInstance;
         public GameWorld gameWorldInstance;
         public ControlComponent controlComponent; //{ get { return BaseSystem.GetComponentOfEntity(controllableEntity, typeof(ControlComponent), Array.IndexOf(gameInstance.gameWorld.componentsTypesID, typeof(ControlComponent)) as ControlComponent; } }
-        public MovementComponent movementComponent; //{ get { return BaseSystem.GetComponentOfEntity(controllableEntity, typeof(MovementComponent)) as MovementComponent; } }
+        public LocationComponent locationComponent; //{ get { return BaseSystem.GetComponentOfEntity(controllableEntity, typeof(MovementComponent)) as MovementComponent; } }
         public ControlSystem controlSystem;
 
         public Controller(GameI _gameInstance, GameWorld _gameWorld)
@@ -78,8 +78,8 @@ namespace ProjectSpaceProject
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
-            bool EntityIsValid = controlComponent is not null && movementComponent is not null;
-            if (EntityIsValid) cameraLocation = new Vector2(movementComponent.location.X, movementComponent.location.Y);
+            bool EntityIsValid = controlComponent is not null && locationComponent is not null;
+            if (EntityIsValid) cameraLocation = new Vector2(locationComponent.location.X, locationComponent.location.Y);
 
             KeyboardState keyboardState = Keyboard.GetState();
             Keys[] pressedKeys = keyboardState.GetPressedKeys();

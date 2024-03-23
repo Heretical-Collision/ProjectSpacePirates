@@ -8,6 +8,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Diagnostics;
 using System.IO;
+using Microsoft.Xna.Framework.Audio;
+using Microsoft.Xna.Framework.Content;
 
 namespace ProjectSpaceProject
 {
@@ -18,6 +20,7 @@ namespace ProjectSpaceProject
         public List<Controller> controllers = new List<Controller>();
         public Dictionary<String, Texture2D> spriteList = new Dictionary<String, Texture2D>();
         private Dictionary<String, SpriteFont> fonts = new Dictionary<String, SpriteFont>();
+        private Dictionary<String, SoundEffect> sounds = new Dictionary<String, SoundEffect>();
         public GameWorld gameWorld;
 
         public GameI()
@@ -39,26 +42,31 @@ namespace ProjectSpaceProject
         protected override void LoadContent()
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
+            Texture2D t = new Texture2D(GraphicsDevice, 1, 1);
+            t.SetData(new[] { Color.Red });
+            spriteList.Add("DebugPixel", t);
 
-            foreach (FileInfo t in new DirectoryInfo(Content.RootDirectory).GetFiles("*_img.xnb")) //При нажатии кнопки build в content.mgcb редакторе, все файлы конвертируются в .xnb файлы
-            {                                                                                      //все - это картинки, шрифты, звуки, и т.д., поэтому чтобы дать понять автоматической
-                                                                                                   //загрузке файлов, что данный файл именно картинка, перед расширением в названии должно стоять _img
-                spriteList.Add(t.Name.Split("_img")[0], Content.Load<Texture2D>(t.Name.Split('.')[0]));
+            foreach (string file in Directory.EnumerateFiles(Directory.GetParent(Directory.GetCurrentDirectory()).Parent + "/Resources/Sprites/", "*.png", SearchOption.AllDirectories)) //Автоматическая загрузка .png
+            {
+                using (var fileStream = new FileStream(file, FileMode.Open))
+                {
+                    Texture2D t_texture = Texture2D.FromStream(GraphicsDevice, fileStream);
+                    FileInfo t_file = new FileInfo(file);
+                    spriteList.Add(t_file.Name.Split(".")[0], t_texture);
+                }
             }
-            fonts.Add("FRM325", Content.Load<SpriteFont>("FRM325"));
-            gameWorld = CreateWorld();
+            fonts.Add("FRM325", Content.Load<SpriteFont>("FRM325x8"));
+                gameWorld = CreateWorld();
         }
 
         protected override void Update(GameTime gameTime)
         {
-            foreach (Controller controller in controllers) 
+            gameWorld.Update(gameTime);
+            base.Update(gameTime);
+            foreach (Controller controller in controllers)
             {
                 controller.Update(gameTime);
             }
-
-            gameWorld.Update(gameTime);
-            base.Update(gameTime);
-
         }
 
         protected override void Draw(GameTime gameTime) 
@@ -67,7 +75,7 @@ namespace ProjectSpaceProject
 
             gameWorld.Draw(gameTime);
             spriteBatch.Begin();
-            spriteBatch.DrawString(fonts["FRM325"], "FPS: " + Convert.ToInt32(1000 / (float)gameTime.ElapsedGameTime.Milliseconds), new Vector2(_graphics.PreferredBackBufferWidth - 100 - (float)new Random().NextDouble() * 5 - 2.5f, _graphics.PreferredBackBufferHeight - 20 - (float)new Random().NextDouble()*5-2.5f), Color.Black);
+            spriteBatch.DrawString(fonts["FRM325"], "FPS: " + Convert.ToInt32(1000 / (float)gameTime.ElapsedGameTime.Milliseconds), new Vector2(_graphics.PreferredBackBufferWidth - 100, _graphics.PreferredBackBufferHeight - 20), Color.Black);
             spriteBatch.End();
             base.Draw(gameTime);
         }

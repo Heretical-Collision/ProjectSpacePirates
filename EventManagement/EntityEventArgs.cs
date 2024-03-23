@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ProjectSpaceProject
+namespace ProjectSpaceProject.EventManage;
+
+public abstract class EntityEventArgs
 {
-    internal class Server
-    {
-    }
+    
 }

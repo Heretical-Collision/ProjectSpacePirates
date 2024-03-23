@@ -9,9 +9,5 @@ namespace ProjectSpaceProject.ECS.Camera
     public class CameraSystem : BaseSystem
     {
 
-        public CameraSystem(GameWorld _gameWorld, Type _typeOfComponent) : base(_gameWorld, _typeOfComponent)
-        {
-
-        }
     }
 }

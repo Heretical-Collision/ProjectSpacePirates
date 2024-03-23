@@ -8,35 +8,25 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using ProjectSpaceProject.ECS.Movement;
 using ProjectSpaceProject.ECS.Control;
+using static ProjectSpaceProject.StaticECSMethods;
 
 namespace ProjectSpaceProject.ECS.Sprite
 {
     public class SpriteSystem : BaseSystem
     {
-        protected override bool isTickable { get { return true; } }
-
-        public override void Run()
-        {
-            base.Run();
-
-        }
-
         public override void Update()
         {
             base.Update();
-            
-
-        }
-
-        protected override void ComponentTick(Entity entity)
-        {
-            base.ComponentTick(entity);
-            GetCurrentSprite(ComponentOfEntity(entity) as SpriteComponent).Update();
+            foreach (SpriteComponent sc in GetAllComponents<SpriteComponent>())
+            {
+                GetCurrentSprite(sc).Update();
+            }
         }
 
         static public SpriteData GetCurrentSprite(SpriteComponent spriteComponent)
-        {   
-            if (spriteComponent.spriteData[spriteComponent.currentSpriteName] is not null) return spriteComponent.spriteData[spriteComponent.currentSpriteName];
+        {
+            SpriteData temp = spriteComponent.spriteData[spriteComponent.currentSpriteName];
+            if (temp is not null) return spriteComponent.spriteData[spriteComponent.currentSpriteName];
             else return spriteComponent.spriteData.First().Value;
         }
 
@@ -54,21 +44,21 @@ namespace ProjectSpaceProject.ECS.Sprite
         {
             foreach (Entity entity in gameWorld.entities)
             {   
-                bool doHaveMovementComponent = false;
+                bool doHaveLocationComponent = false;
                 Vector2 spriteLocation = new Vector2(0, 0);
                 foreach (BaseComponent component in entity.components)
                 {
-                    if (component is not null) if (component.GetSelfType == typeof(MovementComponent))
+                    if (component is not null) if (component.GetType() == typeof(LocationComponent))
                     {
-                        spriteLocation = (component as MovementComponent).location;
-                        doHaveMovementComponent = true;
+                        spriteLocation = (component as LocationComponent).location;
+                        doHaveLocationComponent = true;
                         break;
                     }
                 }
-                if (doHaveMovementComponent) //объекты не должны рисоваться в игровом мире, если они не имеют присутствия в игровом мире (отсутствуют координаты)
+                if (doHaveLocationComponent) //объекты не должны рисоваться в игровом мире, если они не имеют присутствия в игровом мире (отсутствуют координаты)
                     foreach (BaseComponent component in entity.components)
                     {
-                        if (component is not null) if (component.GetSelfType == typeOfComponent)
+                        if (component is not null) if (component.GetType() == typeof(SpriteComponent))
                         {
                                 // Объекты не должны отрисовываться, если они за кадром 
                                 if (new Rectangle(Convert.ToInt32(gameWorld.ClientPlayerController.cameraLocation.X),
@@ -90,13 +80,8 @@ namespace ProjectSpaceProject.ECS.Sprite
                                 }
                         }
                     }
-                doHaveMovementComponent = false;
+                doHaveLocationComponent = false;
             }
-        }
-
-        public SpriteSystem(GameWorld _gameWorld, Type _typeOfComponent) : base(_gameWorld, _typeOfComponent)
-        {
-
         }
     }
 }
